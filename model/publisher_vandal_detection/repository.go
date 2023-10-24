@@ -4,12 +4,16 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/aditya3232/gatewatchApp-services.git/connection"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 type Repository interface {
-	CreateQueueVandalDetection(input VandalDetectionInput) (VandalDetection, error)
+	/*
+		- ambil input dari API, dimasukkan ke entity rmq
+		- disini parameter adalah entitiy
+		- disini returnnya yg akan ditampilkan di API adalah entity rmq,
+	*/
+	CreateQueueVandalDetection(rmqPublisherVandalDetection RmqPublisherVandalDetection) (RmqPublisherVandalDetection, error)
 }
 
 type repository struct {
@@ -20,10 +24,11 @@ func NewRepository(rabbitmq *amqp.Connection) *repository {
 	return &repository{rabbitmq}
 }
 
-func (r *repository) CreateQueueVandalDetection(input VandalDetectionInput) (VandalDetection, error) {
-	ch, err := connection.RabbitMQ().Channel()
+func (r *repository) CreateQueueVandalDetection(rmqPublisherVandalDetection RmqPublisherVandalDetection) (RmqPublisherVandalDetection, error) {
+
+	ch, err := r.rabbitmq.Channel()
 	if err != nil {
-		return VandalDetection{}, err
+		return rmqPublisherVandalDetection, err
 	}
 	defer ch.Close()
 
@@ -37,21 +42,22 @@ func (r *repository) CreateQueueVandalDetection(input VandalDetectionInput) (Van
 	)
 
 	if err != nil {
-		return VandalDetection{}, err
+		return rmqPublisherVandalDetection, err
 	}
 
-	// body from input
-	var inputReadytoMarshal = VandalDetectionInput{
-		Tid:           input.Tid,
-		DateTime:      input.DateTime,
-		Person:        input.Person,
-		ConvertedFile: input.ConvertedFile,
+	// yang dimarshal adalah entity rmq Vandal detection
+	inputReadytoMarshal := RmqPublisherVandalDetection{
+		TidID:                               rmqPublisherVandalDetection.TidID,
+		Tid:                                 rmqPublisherVandalDetection.Tid,
+		DateTime:                            rmqPublisherVandalDetection.DateTime,
+		Person:                              rmqPublisherVandalDetection.Person,
+		ConvertedFileCaptureVandalDetection: rmqPublisherVandalDetection.ConvertedFileCaptureVandalDetection,
 	}
 
 	// Convert the VandalDetection struct to JSON
 	body, err := json.Marshal(inputReadytoMarshal)
 	if err != nil {
-		return VandalDetection{}, err
+		return rmqPublisherVandalDetection, err
 	}
 
 	ctx := context.Background() // Create a context
@@ -67,9 +73,8 @@ func (r *repository) CreateQueueVandalDetection(input VandalDetectionInput) (Van
 	)
 
 	if err != nil {
-		return VandalDetection{}, err
+		return rmqPublisherVandalDetection, err
 	}
 
-	// Return the sent VandalDetection struct
-	return VandalDetection{}, err
+	return rmqPublisherVandalDetection, err
 }
