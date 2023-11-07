@@ -6,17 +6,15 @@ import (
 	"github.com/aditya3232/atmVideoPack-vandalDetection-publisherRmq-services.git/handler"
 	"github.com/aditya3232/atmVideoPack-vandalDetection-publisherRmq-services.git/middleware"
 	"github.com/aditya3232/atmVideoPack-vandalDetection-publisherRmq-services.git/model/publisher_vandal_detection"
-	"github.com/aditya3232/atmVideoPack-vandalDetection-publisherRmq-services.git/model/tb_tid"
 	"github.com/gin-gonic/gin"
 )
 
 func Initialize(router *gin.Engine) {
 	// Initialize repositories
 	publisherVandalDetectionRepository := publisher_vandal_detection.NewRepository(connection.RabbitMQ())
-	tbTidRepository := tb_tid.NewRepository(connection.DatabaseMysql())
 
 	// Initialize services
-	publisherVandalDetectionService := publisher_vandal_detection.NewService(publisherVandalDetectionRepository, tbTidRepository)
+	publisherVandalDetectionService := publisher_vandal_detection.NewService(publisherVandalDetectionRepository)
 
 	// Initialize handlers
 	publisherVandalDetectionHandler := handler.NewPublisherVandalDetectionHandler(publisherVandalDetectionService)

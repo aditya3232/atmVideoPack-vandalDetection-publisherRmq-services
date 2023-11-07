@@ -2,7 +2,6 @@ package publisher_vandal_detection
 
 import (
 	"github.com/aditya3232/atmVideoPack-vandalDetection-publisherRmq-services.git/helper"
-	"github.com/aditya3232/atmVideoPack-vandalDetection-publisherRmq-services.git/model/tb_tid"
 )
 
 type Service interface {
@@ -17,11 +16,10 @@ type Service interface {
 
 type service struct {
 	vandalDetectionRepository Repository
-	tbTidRepository           tb_tid.Repository
 }
 
-func NewService(repository Repository, tbTidRepository tb_tid.Repository) *service {
-	return &service{repository, tbTidRepository}
+func NewService(repository Repository) *service {
+	return &service{repository}
 }
 
 // public message to rmq
