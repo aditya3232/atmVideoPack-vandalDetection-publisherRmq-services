@@ -47,7 +47,6 @@ func (r *repository) CreateQueueVandalDetection(rmqPublisherVandalDetection RmqP
 
 	// yang dimarshal adalah entity rmq Vandal detection
 	inputReadytoMarshal := RmqPublisherVandalDetection{
-		TidID:                               rmqPublisherVandalDetection.TidID,
 		Tid:                                 rmqPublisherVandalDetection.Tid,
 		DateTime:                            rmqPublisherVandalDetection.DateTime,
 		Person:                              rmqPublisherVandalDetection.Person,

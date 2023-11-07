@@ -2,7 +2,6 @@ package publisher_vandal_detection
 
 // formatter akan menampilkan response di api
 type RmqPublisherVandalDetectionFormatter struct {
-	TidID                          *int   `json:"tid_id"`
 	Tid                            string `json:"tid"`
 	DateTime                       string `json:"date_time"`
 	Person                         string `json:"person"`
@@ -12,7 +11,6 @@ type RmqPublisherVandalDetectionFormatter struct {
 func PublisherVandalDetectionFormat(rmqPublisherVandalDetection RmqPublisherVandalDetection) RmqPublisherVandalDetectionFormatter {
 	var formatter RmqPublisherVandalDetectionFormatter
 
-	formatter.TidID = rmqPublisherVandalDetection.TidID
 	formatter.Tid = rmqPublisherVandalDetection.Tid
 	formatter.DateTime = rmqPublisherVandalDetection.DateTime
 	formatter.Person = rmqPublisherVandalDetection.Person

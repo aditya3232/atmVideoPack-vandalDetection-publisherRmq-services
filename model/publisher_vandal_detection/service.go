@@ -49,14 +49,7 @@ func (s *service) CreateQueueVandalDetection(input RmqPublisherVandalDetectionIn
 	// get name file
 	fileName := input.FileCaptureVandalDetection.Filename
 
-	// get id from input tid
-	tidID, err := s.tbTidRepository.GetOneByTid(input.Tid)
-	if err != nil {
-		return rmqPublisherVandalDetection, err
-	}
-
 	newRmqPublisherVandalDetection := RmqPublisherVandalDetection{
-		TidID:                               &tidID.ID,
 		Tid:                                 input.Tid,
 		DateTime:                            input.DateTime,
 		Person:                              input.Person,
